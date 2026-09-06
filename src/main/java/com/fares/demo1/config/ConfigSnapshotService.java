@@ -10,6 +10,7 @@ import com.fares.demo1.config.ConfigValueSampleRepo;
 import com.fares.demo1.event.MonitorEventRepo;
 import com.fares.demo1.common.MetricCache;
 import com.fares.demo1.event.Notifier;
+import com.fares.demo1.common.SnapshotWriteBuffer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
