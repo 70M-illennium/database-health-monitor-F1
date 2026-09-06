@@ -81,6 +81,11 @@ option above.
   grouped the same way as Swagger. Open [Bruno](https://www.usebruno.com), "Open
   Collection", select the `bruno` folder, then pick the "Local" environment (already
   points at `http://localhost:8080` with the default admin credentials).
+- Postman collection: `postman/Database Health Monitor.postman_collection.json` is the
+  same set of requests for [Postman](https://www.postman.com). Import it (File -> Import),
+  then edit the collection's `baseUrl` / `adminUser` / `adminPassword` variables if the
+  defaults (`http://localhost:8080`, `fares` / `fares`) don't match your setup. Non-GET
+  requests inherit HTTP Basic auth from the collection automatically.
 - Every `GET /api/**` endpoint is a read; some require login depending on live policy
   (see `EndpointPolicyRegistry` / `GET /api/admin/policies`).
 - Every non-GET `/api/**` endpoint (admin actions, acknowledging events, asking the AI

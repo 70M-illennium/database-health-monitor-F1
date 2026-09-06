@@ -1,0 +1,1011 @@
+{
+  "info": {
+    "name": "Database Health Monitor",
+    "description": "Every REST endpoint of the Database Health Monitor, grouped the same way as Swagger UI (http://localhost:8080/swagger-ui.html) and the bruno/ collection.\n\nCollection variables (edit under the collection's Variables tab, or override with an environment):\n  baseUrl        default http://localhost:8080\n  adminUser      default fares\n  adminPassword  default fares\n\nEvery GET /api/** is a read; some require login depending on live policy (see GET /api/admin/policies). Every non-GET /api/** endpoint uses HTTP Basic auth with adminUser / adminPassword - those requests already inherit it from the folder/collection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Activity",
+      "item": [
+        {
+          "name": "Recent Snapshots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activity/snapshots?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "activity",
+                "snapshots"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "List recent activity snapshots (the monitor service's own JVM/HTTP activity), newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Snapshot",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activity/snapshots/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "activity",
+                "snapshots",
+                "latest"
+              ]
+            },
+            "description": "Get the most recent activity snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest HTTP",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activity/snapshots/latest/http",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "activity",
+                "snapshots",
+                "latest",
+                "http"
+              ]
+            },
+            "description": "Just the HTTP request section of the latest activity snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest JVM",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activity/snapshots/latest/jvm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "activity",
+                "snapshots",
+                "latest",
+                "jvm"
+              ]
+            },
+            "description": "Just the JVM (heap/memory) section of the latest activity snapshot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Collect Now",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/collect",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "collect"
+              ]
+            },
+            "description": "Run every collector right now instead of waiting for the next scheduled cycle, then re-evaluate thresholds.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Purge Now",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/purge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "purge"
+              ]
+            },
+            "description": "Run the retention purge right now instead of waiting for its schedule.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Thresholds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/thresholds",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "thresholds"
+              ]
+            },
+            "description": "Get the current health-check threshold values. Public read, per SecurityConfig."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Thresholds",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/thresholds",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "thresholds"
+              ]
+            },
+            "description": "Change one or more health-check thresholds live, no redeploy needed - PATCH semantics, send only the fields you want to change. All fields (all optional): diskWarnPercent, diskCritPercent, longTransactionSeconds, slowQueryRatePerMin, tmpDiskTableRatePerMin, bufferPoolHitRatioWarnPercent, bufferPoolHitRatioCritPercent, connectionWarnPercent, connectionCritPercent, latencySigmaK, collectionGapSeconds, baselineWindow, openAfter, resolveAfter.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diskWarnPercent\": 85\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Policies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/policies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "policies"
+              ]
+            },
+            "description": "Get the current cache/protection policy flags for every metric key. Public read, per SecurityConfig."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/policies/:key",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "policies",
+                ":key"
+              ],
+              "variable": [
+                {
+                  "key": "key",
+                  "value": "database.latest"
+                }
+              ]
+            },
+            "description": "Change one metric's cache/protection flags live, no redeploy needed. Set :key to a real metric key from \"Get Policies\" first (e.g. database.latest). Both body fields are optional.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cached\": true,\n  \"protectedAccess\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI Agent",
+      "item": [
+        {
+          "name": "Ask Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agent/ask",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agent",
+                "ask"
+              ]
+            },
+            "description": "Ask the AI health-assessment agent a plain-English question about the monitored database, using only real data from its own tools. Try also: \"what queries are running right now?\", \"any security issues?\", \"why is it slow?\".\n\nRate-limited to 5 requests/minute, separate from the rest of the API. First response can take 10-30s depending on the configured backend.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"is the database healthy?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Config",
+      "item": [
+        {
+          "name": "Recent Snapshots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/config/snapshots?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "snapshots"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "List recent config-change snapshots, newest first - a new row only exists when something actually changed."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/config/snapshots/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "config",
+                "snapshots",
+                "latest"
+              ]
+            },
+            "description": "Get the current tracked configuration values (name -> value)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "item": [
+        {
+          "name": "Recent Snapshots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "List recent database snapshots, newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Snapshot",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest"
+              ]
+            },
+            "description": "Get the most recent database snapshot (204 if nothing has been collected yet)."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/availability",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "availability"
+              ]
+            },
+            "description": "Just the availability section (reachable, latency, uptime) of the latest database snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Connections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/connections",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "connections"
+              ]
+            },
+            "description": "Just the connections section of the latest database snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Workload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/workload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "workload"
+              ]
+            },
+            "description": "Just the workload section (questions/sec, slow queries) of the latest database snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Buffer Pool",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/bufferPool",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "bufferPool"
+              ]
+            },
+            "description": "Just the InnoDB buffer pool section of the latest database snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Locking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/locking",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "locking"
+              ]
+            },
+            "description": "Just the locking and deadlocks section of the latest database snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Storage",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/database/snapshots/latest/storage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "database",
+                "snapshots",
+                "latest",
+                "storage"
+              ]
+            },
+            "description": "Just the storage size section of the latest database snapshot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Recent Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/events?limit=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Recent events, open or resolved, newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Active Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "active"
+              ]
+            },
+            "description": "Events that are still unresolved, most severe first."
+          },
+          "response": []
+        },
+        {
+          "name": "Acknowledge Event",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/:id/ack",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                ":id",
+                "ack"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Acknowledge an event without resolving it (admin only). Set :id to a real event id first.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"investigating\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resolve Event",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/events/:id/resolve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                ":id",
+                "resolve"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Force-resolve an event by hand (admin only). Set :id to a real event id first.",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{adminUser}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{adminPassword}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Host",
+      "item": [
+        {
+          "name": "Recent Snapshots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/host/snapshots?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "host",
+                "snapshots"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "List recent host snapshots, newest first."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Snapshot",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/host/snapshots/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "host",
+                "snapshots",
+                "latest"
+              ]
+            },
+            "description": "Get the most recent host snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest CPU",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/host/snapshots/latest/cpu",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "host",
+                "snapshots",
+                "latest",
+                "cpu"
+              ]
+            },
+            "description": "Just the CPU section of the latest host snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Memory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/host/snapshots/latest/memory",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "host",
+                "snapshots",
+                "latest",
+                "memory"
+              ]
+            },
+            "description": "Just the memory section of the latest host snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Latest Disk",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/host/snapshots/latest/disk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "host",
+                "snapshots",
+                "latest",
+                "disk"
+              ]
+            },
+            "description": "Just the disk section of the latest host snapshot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "item": [
+        {
+          "name": "Findings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/security/findings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "security",
+                "findings"
+              ]
+            },
+            "description": "Security findings from the most recent check cycle, most severe first. Empty list means nothing was found."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Workload",
+      "item": [
+        {
+          "name": "Top Queries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workload/queries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workload",
+                "queries"
+              ]
+            },
+            "description": "Top query digests by total execution time, slowest first (last collection cycle)."
+          },
+          "response": []
+        },
+        {
+          "name": "Live Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workload/sessions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workload",
+                "sessions"
+              ]
+            },
+            "description": "Non-idle sessions as of the last scheduled snapshot (up to 60s old), longest-running first."
+          },
+          "response": []
+        },
+        {
+          "name": "Top Waits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workload/waits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workload",
+                "waits"
+              ]
+            },
+            "description": "Top wait events by total time."
+          },
+          "response": []
+        },
+        {
+          "name": "Table Sizes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workload/tables",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workload",
+                "tables"
+              ]
+            },
+            "description": "Per-table sizes, largest first (updated every 10 minutes)."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "adminUser",
+      "value": "fares",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "fares",
+      "type": "string"
+    }
+  ]
+}
