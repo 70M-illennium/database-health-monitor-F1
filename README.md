@@ -166,9 +166,28 @@ Response:
 {"answer": "status: healthy\nissue: ...\nrecommendation: ..."}
 ```
 
-This endpoint has its own stricter rate limit (5 requests/minute) separate from the
-rest of the API, since each call can mean several database reads plus a full LLM
-round trip.
+In the Postman collection this is **AI Agent -> Ask Agent**, already set up: `POST`
+`{{baseUrl}}/api/agent/ask`, Basic auth inherited from the collection
+(`{{adminUser}}` / `{{adminPassword}}`), `Content-Type: application/json`, and a raw
+JSON body - just edit the `question` string and Send.
+
+Things to know before the first call:
+
+- **Admin only.** Unlike the `GET` endpoints, this one always needs the Basic auth
+  header; a missing or wrong credential returns `401`. (The collection request has it;
+  a hand-built request does not.)
+- **It's slow.** Each call is several database reads plus a full LLM round trip, so the
+  first response takes roughly 10-30s - that's normal, not a hang. If your client gives
+  up, raise its request timeout (Postman: Settings -> General -> Request timeout).
+- **Stricter rate limit:** 5 requests/minute on its own bucket, separate from the rest
+  of the API. The 6th call within a minute returns `429` with a `Retry-After` header.
+- **The LLM backend must be reachable.** The default is self-hosted Ollama at
+  `localhost:11434` with model `qwen2.5:14b` - Ollama must be running and the model
+  pulled (`ollama pull qwen2.5:14b`). If you started the app *inside Docker*, the
+  container cannot see your host's Ollama: run the app locally
+  (`./mvnw spring-boot:run`) instead, or switch to `AI_PROVIDER=openai` / `anthropic`
+  (plus that provider's API key) in `.env` and restart.
+- **A blank question returns `400`** (`question must not be blank`).
 
 ## 6. Run the tests
 
