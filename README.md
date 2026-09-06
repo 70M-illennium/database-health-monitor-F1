@@ -75,17 +75,53 @@ option above.
 
 ## 4. Explore the API
 
-- Swagger UI: `http://localhost:8080/swagger-ui.html` - browse every endpoint without
-  reading controller source.
-- Bruno collection: the `bruno/` folder has a ready-to-use request for every endpoint,
-  grouped the same way as Swagger. Open [Bruno](https://www.usebruno.com), "Open
-  Collection", select the `bruno` folder, then pick the "Local" environment (already
-  points at `http://localhost:8080` with the default admin credentials).
-- Postman collection: `postman/Database Health Monitor.postman_collection.json` is the
-  same set of requests for [Postman](https://www.postman.com). Import it (File -> Import),
-  then edit the collection's `baseUrl` / `adminUser` / `adminPassword` variables if the
-  defaults (`http://localhost:8080`, `fares` / `fares`) don't match your setup. Non-GET
-  requests inherit HTTP Basic auth from the collection automatically.
+Pick whichever of these you're comfortable with - they all hit the same running app on
+`http://localhost:8080`, so the app (step 3) and the databases (step 2) must be up first.
+
+### Swagger UI (nothing to install)
+
+Open **`http://localhost:8080/swagger-ui.html`** in a browser. This is an interactive,
+auto-generated page listing every endpoint grouped by area, with the request/response
+shape for each. To call one: click a row to expand it -> **Try it out** -> fill in any
+parameters -> **Execute**. Swagger shows you the exact `curl` command it ran and the live
+response. For endpoints that need login (see auth note below), click the **Authorize**
+button at the top once and enter the admin username/password; Swagger then sends it with
+every call.
+
+The raw OpenAPI spec is at `http://localhost:8080/v3/api-docs` if you want to import it
+elsewhere.
+
+### Bruno collection (`bruno/` folder)
+
+[Bruno](https://www.usebruno.com) is a free, offline API client (like Postman, but the
+collection is plain files in this repo). Every endpoint is a ready-to-run request,
+grouped the same way as Swagger.
+
+1. Install and open Bruno.
+2. **Open Collection** -> select this repo's **`bruno/`** folder.
+3. Top-right environment dropdown -> pick **`Local`** (already set to
+   `http://localhost:8080` with the default `fares` / `fares` admin credentials).
+4. Click any request -> **Send**.
+
+### Postman collection (`postman/` folder)
+
+If you prefer [Postman](https://www.postman.com), the same 35 requests are provided as a
+single importable file.
+
+1. Open Postman -> **Import** (top-left) -> **Files** -> choose
+   **`postman/Database Health Monitor.postman_collection.json`** from this repo (or drag
+   the file onto the Postman window) -> **Import**.
+2. It appears in the sidebar under **Collections** as **"Database Health Monitor"** with
+   9 folders.
+3. The defaults (`baseUrl` = `http://localhost:8080`, `adminUser` / `adminPassword` =
+   `fares`) are baked in as collection variables, so requests work immediately. To change
+   them: right-click the collection -> **Edit** -> **Variables** -> edit **Current value**
+   -> **Save**.
+4. Non-GET requests already inherit HTTP Basic auth from the collection - no per-request
+   setup.
+
+### Auth, in short
+
 - Every `GET /api/**` endpoint is a read; some require login depending on live policy
   (see `EndpointPolicyRegistry` / `GET /api/admin/policies`).
 - Every non-GET `/api/**` endpoint (admin actions, acknowledging events, asking the AI
