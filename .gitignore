@@ -38,3 +38,6 @@ build/
 ### Postman local workspace (created when the app launches here) ###
 .postman/
 postman/
+
+### Claude Code local session data ###
+.claude/

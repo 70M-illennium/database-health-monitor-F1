@@ -1,4 +1,4 @@
-# demo1 - Database Health Monitor
+# Database Health Monitor
 
 A Spring Boot service that watches a MySQL 8.0 database and the host it runs on. It
 periodically collects health and performance data (availability, connections, buffer
