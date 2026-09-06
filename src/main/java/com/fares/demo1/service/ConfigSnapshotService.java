@@ -52,6 +52,7 @@ public class ConfigSnapshotService {
     private final MonitorEventRepo monitorEventRepo;
     private final Notifier notifier;
     private final MetricCache metricCache;
+    private final SnapshotWriteBuffer writeBuffer;
 
     @Qualifier("targetJdbcTemplate")
     private final JdbcTemplate jdbcTemplate;
@@ -106,7 +107,6 @@ public class ConfigSnapshotService {
 
         ConfigSnapshotEntity header = new ConfigSnapshotEntity();
         header.setTimestamp(Instant.now());
-        configSnapshotRepo.save(header);
 
         List<ConfigValueSample> rows = current.entrySet().stream().map(e -> {
             ConfigValueSample v = new ConfigValueSample();
@@ -115,7 +115,14 @@ public class ConfigSnapshotService {
             v.setValue(e.getValue());
             return v;
         }).toList();
-        configValueSampleRepo.saveAll(rows);
+
+        // Header and its value rows are one unit - the rows FK-reference the header, so
+        // they must be retried (or dropped) together, not as two independent buffered
+        // writes, unlike the unrelated tables the other collectors buffer separately.
+        writeBuffer.save(() -> {
+            configSnapshotRepo.save(header);
+            configValueSampleRepo.saveAll(rows);
+        });
 
         List<String> diffs = current.entrySet().stream()
                 .filter(e -> !e.getValue().equals(previous.get(e.getKey())))
@@ -158,3 +165,4 @@ public class ConfigSnapshotService {
         return map;
     }
 }
+

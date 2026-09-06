@@ -13,3 +13,4 @@ public interface Notifier {
 
     void onResolved(MonitorEventEntity event);
 }
+

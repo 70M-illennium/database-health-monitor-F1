@@ -33,6 +33,7 @@ public class HostSystemSnapshotService {
 
     // ---------- reads for the API ----------
 
+
     /**
      * The most recent host snapshot, or empty if none has been collected yet. Goes
      * through {@link MetricCache} under the key {@code "host.latest"} - see {@code

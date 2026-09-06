@@ -8,3 +8,4 @@ package com.fares.demo1.config;
  */
 public record EndpointPolicy(boolean cached, boolean protectedAccess) {
 }
+//x//

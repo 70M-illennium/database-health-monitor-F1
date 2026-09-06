@@ -24,7 +24,8 @@ import java.time.Instant;
 @Entity
 @Getter
 @Setter
-public class MonitorEventEntity {
+public class
+MonitorEventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

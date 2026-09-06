@@ -74,3 +74,4 @@ public class MetricCache {
     private record Entry(Object value, Duration ttl) {
     }
 }
+
